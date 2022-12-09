@@ -51,8 +51,8 @@
 
             <ImageView
                 android:id="@+id/imWeather"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="60dp"
+                android:layout_height="48dp"
                 android:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -67,7 +67,7 @@
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.47"
+                app:layout_constraintHorizontal_bias="0.517"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imWeather"
                 app:layout_constraintVertical_bias="0.0" />
@@ -108,9 +108,9 @@
 
             <ImageButton
                 android:id="@+id/idSync"
-                android:layout_width="45dp"
-                android:layout_height="42dp"
-                android:layout_marginEnd="16dp"
+                android:layout_width="47dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="12dp"
                 android:background="@null"
                 android:src="@drawable/ic_sync"
                 app:layout_constraintEnd_toEndOf="parent"
