@@ -33,7 +33,6 @@ import org.json.JSONObject
 
 const val API_KEY = "d74ce7d666aa4146b77123846222811"
 class MainFragment : Fragment() {
-    private lateinit var fLocationClient: FusedLocationProviderClient
     private val fList = listOf(
         HoursFragment.newInstance(),
         DaysFragment.newInstance()
@@ -59,60 +58,16 @@ class MainFragment : Fragment() {
         checkPermission()
         init()
         updateCurrentCard()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        checkLocation()
+        requestWeatherData("Berlin")
     }
 
     private fun init() = with(binding){
-        fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         val adapter = VpAdapter(activity as FragmentActivity, fList)
         vp.adapter = adapter
         TabLayoutMediator(tabLayout, vp){
                 tab, pos -> tab.text = tList[pos]
         }.attach()
-        ibSync.setOnClickListener {
-            tabLayout.selectTab(tabLayout.getTabAt(0))
-            checkLocation()
-        }
-    }
 
-    private fun checkLocation(){
-        if(isLocationEnabled()){
-            getLocation()
-        } else {
-            DialogManager.locationSettingsDialog(requireContext(), object : DialogManager.Listener{
-                override fun onClick() {
-                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-                }
-            })
-        }
-    }
-
-    private fun isLocationEnabled(): Boolean{
-        val lm = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    }
-
-    private fun getLocation(){
-        val ct = CancellationTokenSource()
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        fLocationClient
-            .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, ct.token)
-            .addOnCompleteListener{
-                requestWeatherData("${it.result.latitude},${it.result.longitude}")
-            }
     }
 
     private fun updateCurrentCard() = with(binding){
@@ -121,7 +76,7 @@ class MainFragment : Fragment() {
             tvData.text = it.time
             tvCity.text = it.city
             tvCurrentTemp.text = it.currentTemp.ifEmpty { maxMinTemp }
-            tvCondition.text = it.condition
+          //  tvCondition.text = it.condition
             tvMaxMin.text = if(it.currentTemp.isEmpty()) "" else maxMinTemp
             Picasso.get().load("https:" + it.imageUrl).into(imWeather)
         }
@@ -142,24 +97,27 @@ class MainFragment : Fragment() {
     }
 
     private fun requestWeatherData(city: String){
-               val url = "http://api.weatherapi.com/v1/forecast.json?key=" +
-                    API_KEY +
-                    "&q=" +
-                    city +
-                    "&days=3&aqi=no&alerts=no"
-       val queue = Volley.newRequestQueue(context)
-       val request = StringRequest(
-           Request.Method.GET,
-           url,
+        val url = "http://api.weatherapi.com/v1/forecast.json?key=" +
+                API_KEY +
+                "&q=" +
+                city +
+                "&days=" +
+                "3" +
+                "&days=3&aqi=no&alerts=no"
+        val queue = Volley.newRequestQueue(context)
+        val request = StringRequest(
+            Request.Method.GET,
+            url,
             {
                     result -> parseWeatherData(result)
             },
-           {
-                   error -> Log.d("MyLog", "Error: $error")
-           }
-       )
-       queue.add(request)
-//    }
+            {
+                    error -> Log.d("MyLog", "Error: $error")
+            }
+        )
+        queue.add(request)
+    }
+
     private fun parseWeatherData(result: String) {
         val mainObject = JSONObject(result)
         val list = parseDays(mainObject)
