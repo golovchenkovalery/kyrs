@@ -1,7 +1,6 @@
 package com.example.weatherappcursey.fragments
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,23 +10,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.tabs.TabLayoutMediator
 import com.example.weatherappcursey.MainViewModel
-import com.example.weatherappcursey.adapters.VpAdapter
+import  com.example.weatherappcursey.R
+import  com.example.weatherappcursey.adapters.VpAdapter
 import com.example.weatherappcursey.adapters.WeatherModel
 import com.example.weatherappcursey.databinding.FragmentMainBinding
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
 
@@ -76,7 +69,7 @@ class MainFragment : Fragment() {
             tvData.text = it.time
             tvCity.text = it.city
             tvCurrentTemp.text = it.currentTemp.ifEmpty { maxMinTemp }
-          //  tvCondition.text = it.condition
+            tvConndition.text = it.condition
             tvMaxMin.text = if(it.currentTemp.isEmpty()) "" else maxMinTemp
             Picasso.get().load("https:" + it.imageUrl).into(imWeather)
         }
