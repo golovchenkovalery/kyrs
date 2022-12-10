@@ -86,16 +86,27 @@ class MainFragment : Fragment() {
             checkLocation()
         }
 
+        ibSearch.setOnClickListener {
+            DialogManager.searchByNameDialog(requireContext(), object : DialogManager.Listener{
+                override fun onClick(name: String?) {
+                    name?.let { it1 -> requestWeatherData(it1) }
+                }
+            })
+        }
     }
+
+
 
     private fun checkLocation(){
         if(isLocationEnabled()){
             getLocation()
         } else {
             DialogManager.locationSettingsDialog(requireContext(), object : DialogManager.Listener{
-                override fun onClick() {
+                override fun onClick(name:String?) {
                     startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 }
+
+
             })
         }
     }
